@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:sec="https:///www.thymeleaf.org/thymeleaf-extras-sprinfsecurity5"
+      layout:decorator="template1" >
+    <head>
+        <meta charset="UTF-8">
+        <title>Patients app</title>
+        <link rel="stylesheet" type="text/css" href="/webjars/bootstrap/4.3.1/css/bootstrap.min.css" />
+    </head>
+    <body>
+        <div layout:fragment="pageContent">
+            <div class="container mt-3 mx-auto">
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="text-center">Liste des patients</h3>
+                    </div>
+                    <div class="card-body">
+                        <form method="get" th:action="@{patients}" class="d-flex justify-content-center">
+                            <div class="form-group align-items-center">
+                                <label>Name  </label>
+                                <input type="text" name="keyword" th:value="${keyword}">
+                                <button class="btn btn-success">Chercher</button>
+                            </div>
+                        </form>
+                        <table class="table">
+                            <tr>
+                                <th>ID</th><th>Nom</th><th>Date Naissance</th><th>Score</th><th>Malade</th>
+                            </tr>
+                            <tr th:each ="p:${patients}">
+                                <td th:text="${p.id}"></td>
+                                <td th:text="${p.nom}"></td>
+                                <td th:text="${p.dateNaissance}"></td>
+                                <td th:text="${p.score}"></td>
+                                <td th:text="${p.malade}"></td>
+                                <td sec:authorize="hasRole('ROLE_ADMIN')">
+                                    <a th:href="@{editPatient(id=${p.id})}" class="btn btn-info">Edit</a>
+                                </td>
+                                <td sec:authorize="hasRole('ROLE_ADMIN')" >
+                                    <a class="btn btn-danger"
+                                       th:href="@{deletePatient(id=${p.id},keyword=${keyword},page=${currentPage})}"
+                                       onclick="return confirm('Etes vous sure de vouloir supprimer')">
+                                        Delete
+                                    </a>
+                                </td>
+                            </tr>
+                        </table>
+                        <ul class="nav nav-pills d-flex justify-content-center">
+                            <li  th:each="page,status:${pages}">
+                                <a th:class="${status.index==currentPage?'btn btn-primary':'btn'}"
+                                   th:href="@{patients(page=${status.index},keyword=${keyword})}"
+                                   th:text="${status.index + 1}"></a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </body>
+</html>
