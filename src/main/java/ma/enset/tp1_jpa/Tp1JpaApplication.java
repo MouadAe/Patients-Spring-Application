@@ -2,6 +2,10 @@ package ma.enset.tp1_jpa;
 
 import ma.enset.tp1_jpa.entities.Patient;
 import ma.enset.tp1_jpa.repositories.PatientRepository;
+import ma.enset.tp1_jpa.security.entities.User;
+import ma.enset.tp1_jpa.security.entities.UsersRoles;
+import ma.enset.tp1_jpa.security.repositories.UserRepository;
+import ma.enset.tp1_jpa.security.repositories.UsersRolesRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
@@ -19,6 +23,10 @@ public class Tp1JpaApplication implements CommandLineRunner {
 
     @Autowired
     private PatientRepository patientRepository;
+    @Autowired
+    private UserRepository userRepository;
+    @Autowired
+    private UsersRolesRepository usersRolesRepository;
 
     @Override
     public void run(String... args) throws Exception {
@@ -33,6 +41,15 @@ public class Tp1JpaApplication implements CommandLineRunner {
         patientRepository.save(new Patient(null,"Ibrahim",new Date(),300,true));
         patientRepository.save(new Patient(null,"Marwane",new Date(),7700,true));
         patientRepository.save(new Patient(null,"Ismail",new Date(),2100,true));
+
+        userRepository.save(new User("user1","$2a$10$hP9Oz5.n5t89tbAAc5.z4uEXjLicL692uUXb5mtxqIHHsu6V0SZ2K",true));
+        userRepository.save(new User("admin","$2a$10$hP9Oz5.n5t89tbAAc5.z4uEXjLicL692uUXb5mtxqIHHsu6V0SZ2K",true));
+
+        usersRolesRepository.save(new UsersRoles("user1","USER"));
+        usersRolesRepository.save(new UsersRoles("admin","USER"));
+        usersRolesRepository.save(new UsersRoles("admin","ADMIN"));
+
+
 
 //        System.out.println("*********************************************************************");
 //            for (Patient p : patientRepository.findAll()) {
